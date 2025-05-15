@@ -1,0 +1,10 @@
+﻿Django>=4.0,<5.0
+google-generativeai
+pylast
+requests
+django-crispy-forms
+gunicorn
+python-decouple
+django-jazzmin
+whitenoise
+pillow
