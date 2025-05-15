@@ -1,0 +1,107 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Song Data Visualizations</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        h1 {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .chart-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            padding: 20px;
+        }
+        canvas {
+            max-width: 100%;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>Song Data Visualizations</h1>
+    <div class="chart-container">
+        <!-- Bar chart for artist distribution -->
+        <div>
+            <h3>Top Artists by Number of Songs</h3>
+            <canvas id="artistBarChart"></canvas>
+        </div>
+
+        <!-- Pie chart for playlists created by users -->
+        <div>
+            <h3>Playlists Created by Users</h3>
+            <canvas id="userPlaylistPieChart"></canvas>
+        </div>
+    </div>
+
+    <script>
+        // Debugging: Display raw JSON data in the console to verify format
+        console.log("Artist Data: ", JSON.parse('{{ artist_data|safe }}'));
+        console.log("Playlist Data: ", JSON.parse('{{ playlist_data|safe }}'));
+
+        // Bar Chart: Top Artists by Song Count
+        const artistBarChartData = {
+            labels: JSON.parse('{{ artist_data|safe }}').map(item => item.artist),
+            datasets: [{
+                label: 'Number of Songs',
+                data: JSON.parse('{{ artist_data|safe }}').map(item => item.count),
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1
+            }]
+        };
+
+        new Chart(document.getElementById('artistBarChart'), {
+            type: 'bar',
+            data: artistBarChartData,
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // Pie Chart: Playlists Created by Users
+        const userPlaylistPieChartData = {
+            labels: JSON.parse('{{ playlist_data|safe }}').map(item => item.user__username),
+            datasets: [{
+                label: 'Number of Playlists',
+                data: JSON.parse('{{ playlist_data|safe }}').map(item => item.playlist_count),
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(153, 102, 255, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)'
+                ],
+                borderWidth: 1
+            }]
+        };
+
+        new Chart(document.getElementById('userPlaylistPieChart'), {
+            type: 'pie',
+            data: userPlaylistPieChartData
+        });
+    </script>
+</body>
+</html>
